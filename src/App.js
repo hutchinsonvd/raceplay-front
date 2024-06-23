@@ -38,6 +38,7 @@ function App() {
     return (
       <div className="App">
               
+              <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
                     <br></br>
                     <img style={{ width: "22%", height: "22%" }} alt="hog" src={person.image_url} id="image"/>
                     
