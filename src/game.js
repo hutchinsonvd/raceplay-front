@@ -5,7 +5,7 @@ import axios from 'axios';
 
 //make a server and just deploy it to render to continue testing
 var TEST_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Bundesarchiv_Bild_183-1985-0810-023,_Christine_Wachtel,_Hildegard_Körner-Ullrich.jpg/200px-Bundesarchiv_Bild_183-1985-0810-023,_Christine_Wachtel,_Hildegard_Körner-Ullrich.jpg";
-const backendURL = process.env.BACKEND;
+const backendURL = "https://raceplay.onrender.com";
 
 export function getNextImage() {
 
