@@ -18,6 +18,7 @@ export function getNextImage() {
 }
 
 export async function getRandomPerson() {
+    console.log(backendURL);
 
     return await axios.get(backendURL + "/random")
     .then(response => {
@@ -27,6 +28,7 @@ export async function getRandomPerson() {
 
 
 export async function getNationalities() {
+    console.log(backendURL);
 
     return await axios.get(backendURL + "/nationalities")
     .then(response => {
