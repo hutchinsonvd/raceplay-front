@@ -6,7 +6,7 @@ import axios from 'axios';
 //make a server and just deploy it to render to continue testing
 const backendURL = "https://raceplay.onrender.com";
 //const backendURL = "http://localhost:8080";
-const SECRET = process.env.SECRET;
+const SECRET = REACT_APP_SECRET;
 //const SECRET = "SECRET";
 
 axios.defaults.headers.common['Authorization'] = SECRET;
