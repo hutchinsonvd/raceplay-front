@@ -9,6 +9,8 @@ const backendURL = "https://raceplay.onrender.com";
 const SECRET = process.env.SECRET;
 //const SECRET = "SECRET";
 
+axios.defaults.headers.common['Authorization'] = SECRET;
+
 export function getNextImage() {
 
     getRandomPerson()
@@ -21,8 +23,9 @@ export function getNextImage() {
 
 export async function getRandomPerson() {
     console.log(backendURL);
+    console.log(SECRET);
 
-    return await axios.get(backendURL + "/random", {headers: {"Authorization": SECRET, "Access-Control-Allow-Origin" : "*"}})
+    return await axios.get(backendURL + "/random")
     .then(response => {
         console.log(response);
         return response.data;
