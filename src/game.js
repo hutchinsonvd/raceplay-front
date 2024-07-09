@@ -22,7 +22,7 @@ export function getNextImage() {
 export async function getRandomPerson() {
     console.log(backendURL);
 
-    return await axios.get(backendURL + "/random", {headers: {'Authorization': SECRET}})
+    return await axios.get(backendURL + "/random", {headers: {Authorization: SECRET}})
     .then(response => {
         console.log(response);
         return response.data;
@@ -40,7 +40,7 @@ export async function getNationalities(difficulty, person, score) {
 
     return await axios.post(backendURL + "/nationalities" + "/" + difficulty, {data: JSON.stringify(person)},
     {
-        headers: { 'Content-Type': 'application/json; charset=UTF-8', 'Authorization': SECRET },
+        headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: SECRET },
       })
     .then(response => {
         console.log(response);
