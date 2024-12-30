@@ -1,6 +1,6 @@
 import './App.css';
 import React, {useEffect, useState} from 'react'
-import { getNationalities, getNextImage, getRandomPerson } from './game';
+import { isSameRegion, getNationalities, getNextImage, getRandomPerson } from './game';
 
 function App() {
   
@@ -40,7 +40,8 @@ function App() {
 
       
       alert('correct!');
-      setScore(score + 1);
+  
+      setScore(score + 5);
       // updatePersonAndNationalityList(difficulty);
 
       // if (gameMode === HELTER_SKELTER) {
@@ -48,16 +49,34 @@ function App() {
       // };
     }
     else {
-      console.log(person.nationality);
-      
-      alert('incorrect!');
+      console.debug(person.nationality);
 
-      if (gameMode === HELTER_SKELTER) {
-        setTimeLeft(t => t - 20);
-      }
-      else {
-        setScore(0);
-      }
+      isSameRegion(person.nationality, selection)
+      .then(result => {
+        if (!result) {
+          alert('incorrect!');
+
+          if (gameMode === HELTER_SKELTER) {
+            setTimeLeft(t => t - 20);
+          }
+          else {
+            setScore(0);
+          }
+        }
+        else {
+          alert('Same region but not the right country')
+
+          if (gameMode === HELTER_SKELTER) {
+            setTimeLeft(t => t + 5);
+            setScore( + 1)
+          }
+          else {
+            setScore(score + 1);
+          }
+        }
+      })
+      
+      
     }
   }, [selection]);
 
@@ -79,33 +98,9 @@ function App() {
     setTimeLeft(60);
   }
 
+  async function checkSameRegion(candidate, actual) {
 
-  async function evaluateChoice() {
-
-    if (selection === person.nationality) {
-
-      
-      alert('correct!');
-      setScore(score + 1);
-      // updatePersonAndNationalityList(difficulty);
-
-      // if (gameMode === HELTER_SKELTER) {
-      //   setTimeLeft(t => t +15);
-      // };
-    }
-    else {
-      console.log(person.nationality);
-      
-      alert('incorrect!');
-
-      if (gameMode === HELTER_SKELTER) {
-        setTimeLeft(t => t - 20);
-      }
-      else {
-        setScore(0);
-      }
-    }
-  };
+  }
 
   async function updateGameMode(gameMode, difficulty) {
 
