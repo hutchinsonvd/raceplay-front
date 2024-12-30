@@ -60,6 +60,7 @@ function App() {
             setTimeLeft(t => t - 20);
           }
           else {
+            //TODO: show "heres your score modal"
             setScore(0);
           }
         }
@@ -94,12 +95,9 @@ function App() {
 
   if (timeLeft <= 0 && gameMode === HELTER_SKELTER) {
     alert("Time's up!");
+    //TODO: show "heres your score modal"
     setScore(0);
     setTimeLeft(60);
-  }
-
-  async function checkSameRegion(candidate, actual) {
-
   }
 
   async function updateGameMode(gameMode, difficulty) {
