@@ -4,10 +4,10 @@
 import axios from 'axios';
 
 //make a server and just deploy it to render to continue testing
-const backendURL = "https://raceplay.onrender.com";
-//const backendURL = "http://localhost:8080";
-const SECRET = process.env.REACT_APP_SECRET;
-//const SECRET = "SECRET";
+//const backendURL = "https://raceplay.onrender.com"; //prod only
+const backendURL = "http://localhost:8080";
+//const SECRET = process.env.REACT_APP_SECRET; //prod only
+const SECRET = "SECRET";
 
 axios.defaults.headers.common['Authorization'] = SECRET;
 
@@ -22,19 +22,19 @@ export function getNextImage() {
 }
 
 export async function getRandomPerson() {
-    console.log(backendURL);
-    console.log(SECRET);
+    console.debug(backendURL);
+    console.debug(SECRET);
 
     return await axios.get(backendURL + "/random")
     .then(response => {
-        console.log(response);
+        console.debug(response);
         return response.data;
     })
 }
 
 
 export async function getNationalities(difficulty, person, score) {
-    console.log(JSON.stringify(person));
+    console.debug(JSON.stringify(person));
 
     if ("helterSkelter" === difficulty) {
 
@@ -46,7 +46,7 @@ export async function getNationalities(difficulty, person, score) {
         headers: { 'Content-Type': 'application/json; charset=UTF-8', "Authorization": SECRET, "Access-Control-Allow-Origin" : "*",},
       })
     .then(response => {
-        console.log(response);
+        console.debug(response);
         return response.data;
     })
 }
@@ -58,7 +58,19 @@ export async function getHelterSkelterNationalities(person, score) {
         headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: SECRET },
       })
     .then(response => {
-        console.log(response);
+        console.debug(response);
         return response.data;
     })
+}
+
+export async function isSameRegion(actual, candidate) {
+
+    return await axios.post(backendURL + "/region", {actual: actual, candidate: candidate},
+    {
+        headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: SECRET },
+      })
+      .then(response => {
+        console.debug(response)
+        console.debug(actual + " vs " + candidate)
+        return response.data});
 }
