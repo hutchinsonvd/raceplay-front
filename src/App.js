@@ -1,5 +1,6 @@
 import './App.css';
 import React, {useEffect, useState} from 'react'
+import Modal from 'react-modal'
 import { isSameRegion, getNationalities, getNextImage, getRandomPerson } from './game';
 
 function App() {
@@ -11,14 +12,27 @@ function App() {
   const HELTER_SKELTER = "helterSkelter";
   const SANDBOX = "Sandbox";
   
+  const modalCSS = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
 
   const [person, setPerson] = useState(null);
   const [nationalities, setNationalities] = useState(null);
   const [selection, setSelection] = useState(null);
   const [difficulty, setDifficulty] = useState(EASY);
   const [score, setScore] = useState(0);
+  const [recentScore, setRecentScore] = useState(score);
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameMode, setGameMode] = useState(SANDBOX);
+  const [showScoreModal, setShowScoreModal] = useState(false);
 
   useEffect(() => {
     if (score != 0) {
@@ -29,7 +43,6 @@ function App() {
       };
     }
   }, [score]);
-
 
   useEffect(() => {
 
@@ -42,11 +55,6 @@ function App() {
       alert('correct!');
   
       setScore(score + 5);
-      // updatePersonAndNationalityList(difficulty);
-
-      // if (gameMode === HELTER_SKELTER) {
-      //   setTimeLeft(t => t +15);
-      // };
     }
     else {
       console.debug(person.nationality);
@@ -60,7 +68,8 @@ function App() {
             setTimeLeft(t => t - 20);
           }
           else {
-            setScore(0);
+            
+            pauseGameandShowModal();
           }
         }
         else {
@@ -68,7 +77,7 @@ function App() {
 
           if (gameMode === HELTER_SKELTER) {
             setTimeLeft(t => t + 5);
-            setScore( + 1)
+            setScore(score + 1)
           }
           else {
             setScore(score + 1);
@@ -92,14 +101,20 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  if (timeLeft <= 0 && gameMode === HELTER_SKELTER) {
-    alert("Time's up!");
-    setScore(0);
-    setTimeLeft(60);
+  if (timeLeft <= 0 && gameMode === HELTER_SKELTER && !showScoreModal) {
+
+    try {
+      showModalForHelterSkelter();
+    }
+    catch (error) {
+      console.error(error)
+    }
   }
 
-  async function checkSameRegion(candidate, actual) {
-
+  async function showModalForHelterSkelter() {
+    setRecentScore(score);
+    setScore(0);
+    setShowScoreModal(true);
   }
 
   async function updateGameMode(gameMode, difficulty) {
@@ -149,6 +164,23 @@ function App() {
     setSelection(e.target.innerText.replaceAll(' ', '_'));
   }
 
+  async function pauseGameandShowModal() {
+    setRecentScore(score);
+    setShowScoreModal(true);
+  }
+
+  async function restartGameOnModalClose() {
+    setShowScoreModal(false);
+    setScore(0);
+    
+    if (HELTER_SKELTER == gameMode) {
+      setTimeLeft(60);
+    } 
+
+    updatePersonAndNationalityList(difficulty);
+    
+  }
+
   if (person != null && nationalities != null) {
 
     return (
@@ -175,12 +207,21 @@ function App() {
                     <button type="button" onClick={() => nextChoice(difficulty)}>I give up! </button>
                 
 
-                    
+                    <Modal isOpen={showScoreModal}
+                      onRequestClose={() => restartGameOnModalClose()} 
+                      style={modalCSS}>
+
+                      <h2>You scored: {recentScore} </h2>
+                      <p>Game mode:  {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode}</p>
+                      <p>{gameMode != HELTER_SKELTER ? "Difficulty: " + difficulty : null}</p>
+                      <button className="modalButton" type="button" onClick={() => restartGameOnModalClose()}>Retry</button>
+        </Modal>
 
                     <br></br>
                     <br></br>
 
                     <button type="button" onClick={() => updateGameMode(HELTER_SKELTER, HELTER_SKELTER)}> Helter Skelter Mode </button> <button type="button" onClick={() => updateGameMode(SANDBOX, EASY)}> Easy </button> <button type="button" onClick={() => updateGameMode(SANDBOX, MEDIUM)}> Medium </button> <button type="button" onClick={() => updateGameMode(SANDBOX, HARD)}> Hard </button>
+                    
                     <p className='score'> Score: {score} </p>
                     {difficulty === HELTER_SKELTER ? null : <p className='difficulty'> Difficulty: {difficulty} </p> }
                     <p className='gameMode'>Game mode: {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode} </p>
