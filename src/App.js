@@ -23,7 +23,6 @@ function App() {
     },
   };
 
-
   const [person, setPerson] = useState(null);
   const [nationalities, setNationalities] = useState(null);
   const [selection, setSelection] = useState(null);
@@ -50,9 +49,6 @@ function App() {
       return;
     }
     if (selection === person.nationality) {
-
-      
-      alert('correct!');
   
       setScore(score + 5);
     }
@@ -62,7 +58,6 @@ function App() {
       isSameRegion(person.nationality, selection)
       .then(result => {
         if (!result) {
-          alert('incorrect!');
 
           if (gameMode === HELTER_SKELTER) {
             setTimeLeft(t => t - 20);
@@ -119,16 +114,22 @@ function App() {
 
   async function updateGameMode(gameMode, difficulty) {
 
-    return updatePersonAndNationalityList(difficulty)
+    setScore(0);
+
+    if (HELTER_SKELTER == gameMode) {
+
+      return updatePersonAndNationalityListForHelterSkelter()
       .then(data => setGameMode(gameMode))
       .then(data => {
         if (gameMode === HELTER_SKELTER) {
           
           setTimeLeft(60);
         }
+      })
+    }
 
-        setScore(0);
-      });
+    return updatePersonAndNationalityList(difficulty)
+      .then(data => setGameMode(gameMode));
   }
 
   async function nextChoice(difficulty) {
@@ -147,9 +148,21 @@ function App() {
 
     setPerson(data);
     setDifficulty(difficulty);
-
+    setSelection(null);
   
     return getNationalities(difficulty, data, score)
+        .then(data => setNationalities(data));
+    });
+  }
+
+  async function updatePersonAndNationalityListForHelterSkelter() {
+    return getRandomPerson().then(data => {
+
+    setPerson(data);
+    setDifficulty(HELTER_SKELTER);
+    setSelection(null);
+  
+    return getNationalities(HELTER_SKELTER, data, 0)
         .then(data => setNationalities(data));
     });
   }
@@ -196,14 +209,14 @@ function App() {
                     <img style={{ width: "22%", height: "22%" }} alt="hog" src={person.image_url} onError={() => logBrokenImageAndGetNewPerson()}id="image"/>
                     
                     <br></br>
-                    <label htmlFor="nationalities">Choose a nationality: </label>
+                    <label style={{fontSize: '20px' }} htmlFor="nationalities">Choose a nationality: </label>
 
                     <br></br>
                     <br></br>
               
 
                     {nationalities.map(nat => (
-                      <button style={{ marginLeft: '.25rem' }} key={nat} value={nat} onClick={e => handleButtonSelect(e)} >{nat.replaceAll('_', ' ')}</button>
+                      <button style={{ marginLeft: '.25rem', fontSize: '20px' }} key={nat} onClick={e => handleButtonSelect(e)} >{nat.replaceAll('_', ' ')}</button>
                     ))}
                 
                     <br></br>
@@ -228,7 +241,7 @@ function App() {
 
                     <button type="button" onClick={() => updateGameMode(HELTER_SKELTER, HELTER_SKELTER)}> Helter Skelter Mode </button> <button type="button" onClick={() => updateGameMode(SANDBOX, EASY)}> Easy </button> <button type="button" onClick={() => updateGameMode(SANDBOX, MEDIUM)}> Medium </button> <button type="button" onClick={() => updateGameMode(SANDBOX, HARD)}> Hard </button>
                     
-                    <p className='score'> Score: {score} </p>
+                    <p className='score' style={{fontSize: '20px' }}> Score: {score} </p>
                     {difficulty === HELTER_SKELTER ? null : <p className='difficulty'> Difficulty: {difficulty} </p> }
                     <p className='gameMode'>Game mode: {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode} </p>
                     <p className='timer'>{gameMode === HELTER_SKELTER ? timeLeft : null} </p>
