@@ -9,13 +9,6 @@ function App() {
   const MEDIUM = "medium";
   const HARD = "hard";
 
-  const CORRECT = "C";
-  const CORRECT_MESSAGE = ""
-  const WRONG = "W";
-  const WRONG_MESSAGE = "incorrect!";
-  const CORRECT_REGION = "CR";
-  const CORRECT_REGION_MESSAGE = "Same region but not the right country";
-
   const HELTER_SKELTER = "helterSkelter";
   const SANDBOX = "Sandbox";
   
