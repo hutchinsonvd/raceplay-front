@@ -30,7 +30,6 @@ function App() {
     },
   };
 
-
   const [person, setPerson] = useState(null);
   const [nationalities, setNationalities] = useState(null);
   const [selection, setSelection] = useState(null);
@@ -40,9 +39,6 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameMode, setGameMode] = useState(SANDBOX);
   const [showScoreModal, setShowScoreModal] = useState(false);
-  const [resultVisible, setResultVisible] = useState(false);
-  const [result, setResult] = useState(WRONG);
-
 
   useEffect(() => {
     if (score != 0) {
@@ -60,10 +56,6 @@ function App() {
       return;
     }
     if (selection === person.nationality) {
-
-      
-      //alert('correct!');
-      showResult(CORRECT_MESSAGE);
   
       setScore(score + 5);
     }
@@ -73,8 +65,6 @@ function App() {
       isSameRegion(person.nationality, selection)
       .then(result => {
         if (!result) {
-          //alert('incorrect!');
-          showResult(WRONG_MESSAGE)
 
           if (gameMode === HELTER_SKELTER) {
             setTimeLeft(t => t - 20);
@@ -86,7 +76,6 @@ function App() {
         }
         else {
           alert('Same region but not the right country')
-          showResult(CORRECT_REGION_MESSAGE)
 
           if (gameMode === HELTER_SKELTER) {
             setTimeLeft(t => t + 5);
@@ -122,13 +111,6 @@ function App() {
     catch (error) {
       console.error(error)
     }
-  }
-
-  function showResult(result) {
-
-    setResult(result);
-    setResultVisible(true);
-    setTimeout(() => setResultVisible(false), 2000)
   }
 
   async function showModalForHelterSkelter() {
