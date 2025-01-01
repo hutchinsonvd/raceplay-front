@@ -70,9 +70,6 @@ function App() {
           else {
             
             pauseGameandShowModal();
-            //setShowScoreModal(true);
-            //TODO: only set score on modal close
-            //setScore(0);
           }
         }
         else {
@@ -105,17 +102,13 @@ function App() {
   }, []);
 
   if (timeLeft <= 0 && gameMode === HELTER_SKELTER && !showScoreModal) {
-    //alert("Time's up!");
+
     try {
       showModalForHelterSkelter();
     }
     catch (error) {
       console.error(error)
     }
-    //setShowScoreModal(true);
-    //TODO only set score and time left on modal close
-    //setScore(0);
-    //setTimeLeft(60);
   }
 
   async function showModalForHelterSkelter() {
