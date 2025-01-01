@@ -181,13 +181,19 @@ function App() {
     
   }
 
+  async function logBrokenImageAndGetNewPerson() {
+    //TODO: log to database broken image
+
+    updatePersonAndNationalityList(difficulty);
+  }
+
   if (person != null && nationalities != null) {
 
     return (
       <div className="App">
               
                     <br></br>
-                    <img style={{ width: "22%", height: "22%" }} alt="hog" src={person.image_url} id="image"/>
+                    <img style={{ width: "22%", height: "22%" }} alt="hog" src={person.image_url} onError={() => logBrokenImageAndGetNewPerson()}id="image"/>
                     
                     <br></br>
                     <label htmlFor="nationalities">Choose a nationality: </label>
