@@ -10,7 +10,6 @@ const backendURL = "https://raceplay.onrender.com"; //prod only
 const SECRET = process.env.REACT_APP_SECRET; //prod only
 //const SECRET = "SECRET";
 
-//TODO add CRYPT KEY BEFORE DEPLOYING
 axios.defaults.headers.common['Authorization'] = SECRET;
 
 export function getNextImage() {
@@ -35,8 +34,6 @@ export async function getRandomPerson() {
         return data;
     })
 }
-
-//TODO: encrypt the person object in this payload :)
 
 export async function getNationalities(difficulty, person, score) {
     console.debug(JSON.stringify(person));
