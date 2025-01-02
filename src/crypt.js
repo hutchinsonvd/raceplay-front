@@ -6,6 +6,9 @@ const secret_key = process.env.SECRET_KEY //prod only
 
 export function encryptData(data) {
 
+    console.log(data);
+    console.log(secret_key);
+    
     return {
         id: encrypt(data.id),
         label: encrypt(data.label),
