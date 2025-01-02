@@ -2,6 +2,7 @@
 //it auto loads a picture from dataset
 //user has a scroll bar with all the possible nationalities to choose
 import axios from 'axios';
+import {decryptPerson, encryptData} from './crypt'
 
 //make a server and just deploy it to render to continue testing
 const backendURL = "https://raceplay.onrender.com"; //prod only
@@ -28,10 +29,11 @@ export async function getRandomPerson() {
     return await axios.get(backendURL + "/random")
     .then(response => {
         console.debug(response);
-        return response.data;
+        var data = decryptPerson(response.data);
+        console.log(data);
+        return data;
     })
 }
-
 
 export async function getNationalities(difficulty, person, score) {
     console.debug(JSON.stringify(person));
@@ -41,7 +43,7 @@ export async function getNationalities(difficulty, person, score) {
         return getHelterSkelterNationalities(person, score);
     }
 
-    return await axios.post(backendURL + "/nationalities" + "/" + difficulty, {data: JSON.stringify(person)},
+    return await axios.post(backendURL + "/nationalities" + "/" + difficulty, {data: JSON.stringify(encryptData(person))},
     {
         headers: { 'Content-Type': 'application/json; charset=UTF-8', "Authorization": SECRET, "Access-Control-Allow-Origin" : "*",},
       })
@@ -53,7 +55,7 @@ export async function getNationalities(difficulty, person, score) {
 
 export async function getHelterSkelterNationalities(person, score) {
 
-    return await axios.post(backendURL + "/helterSkelter", {data: JSON.stringify(person), score: JSON.stringify(score)},
+    return await axios.post(backendURL + "/helterSkelter", {data: JSON.stringify((encryptData(person))), score: JSON.stringify(score)},
     {
         headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: SECRET },
       })
