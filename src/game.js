@@ -5,10 +5,10 @@ import axios from 'axios';
 import {decryptPerson, encryptData} from './crypt'
 
 //make a server and just deploy it to render to continue testing
-//const backendURL = "https://raceplay.onrender.com"; //prod only
-const backendURL = "http://localhost:8080";
-//const SECRET = process.env.REACT_APP_SECRET; //prod only
-const SECRET = "SECRET";
+const backendURL = "https://raceplay.onrender.com"; //prod only
+//const backendURL = "http://localhost:8080";
+const SECRET = process.env.REACT_APP_SECRET; //prod only
+//const SECRET = "SECRET";
 
 //TODO add CRYPT KEY BEFORE DEPLOYING
 axios.defaults.headers.common['Authorization'] = SECRET;

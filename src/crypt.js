@@ -1,27 +1,18 @@
 import crypto from "crypto-js"
 
-//const secret_key = process.env.SECRET_KEY //prod only
-const secret_key = "abcd"
+const secret_key = process.env.SECRET_KEY //prod only
+//const secret_key = "abcd"
 
 
 export function encryptData(data) {
-    console.log(data);
 
-    var a = {
+    return {
         id: encrypt(data.id),
         label: encrypt(data.label),
         nationality: encrypt(data.nationality),
         year_of_birth: encrypt(data.year_of_birth),
         image_url: encrypt(data.image_url)
     }
-
-    var b = decryptPerson(a);
-
-    console.log(a);
-
-    console.log(b);
-
-    return a;
   }
 
   function encrypt(data) {
