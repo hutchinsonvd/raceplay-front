@@ -28,6 +28,9 @@ export function encryptData(data) {
 
 export function decryptPerson(data) {
 
+    console.log(data);
+    console.log(secret_key);
+
     return {
         id: decrypt(data.id),
         label: decrypt(data.label),
