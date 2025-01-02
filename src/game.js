@@ -5,7 +5,7 @@ import axios from 'axios';
 import {decryptPerson, encryptData} from './crypt'
 
 //make a server and just deploy it to render to continue testing
-const backendURL = "https://raceplay.onrender.com"; //prod only
+const backendURL = process.env.REACT_APP_BACKEND; //prod only
 //const backendURL = "http://localhost:8080";
 const SECRET = process.env.REACT_APP_SECRET; //prod only
 //const SECRET = "SECRET";
@@ -30,7 +30,6 @@ export async function getRandomPerson() {
     .then(response => {
         console.debug(response);
         var data = decryptPerson(response.data);
-        console.log(data);
         return data;
     })
 }

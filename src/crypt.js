@@ -6,8 +6,8 @@ const secret_key = process.env.REACT_APP_SECRET_KEY //prod only
 
 export function encryptData(data) {
 
-    console.log(data);
-    console.log(secret_key);
+    console.debug(data);
+    console.debug(secret_key);
     
     return {
         id: encrypt(data.id),
@@ -28,8 +28,8 @@ export function encryptData(data) {
 
 export function decryptPerson(data) {
 
-    console.log(data);
-    console.log(secret_key);
+    console.debug(data);
+    console.debug(secret_key);
 
     return {
         id: decrypt(data.id),
