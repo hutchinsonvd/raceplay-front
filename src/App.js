@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useEffect, useState} from 'react'
 import Modal from 'react-modal'
-import { isSameRegion, getNationalities, getNextImage, getRandomPerson } from './game';
+import { isSameRegion, getNationalities, getNextImage, getRandomPerson, isHighScore, getHighScores, addHighScore } from './game';
 
 function App() {
   
@@ -32,6 +32,10 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameMode, setGameMode] = useState(SANDBOX);
   const [showScoreModal, setShowScoreModal] = useState(false);
+  const [showHighScoreModal, setShowHighScoreModal] = useState(false);
+  const [showHighScoreListModal, setShowHighScoreListModal] = useState(false);
+  const [highScoreList, setHighScoreList] = useState([])
+  const [canAddHighScore, setCanAddHighScore] = useState(false);
 
   useEffect(() => {
     if (score != 0) {
@@ -177,11 +181,24 @@ function App() {
     setSelection(e.target.innerText.replaceAll(' ', '_'));
   }
 
+  //TODO: check for high score and show high score modal
   async function pauseGameandShowModal() {
-    setRecentScore(score);
-    setShowScoreModal(true);
+    isHighScore(gameMode, difficulty, score)
+    .then(highScore => {
+
+      if (!highScore) {
+        setRecentScore(score);
+        setShowScoreModal(true)
+      }
+      else {
+        setCanAddHighScore(true);
+        setRecentScore(score);
+        setShowHighScoreModal(true);
+      }
+  })
   }
 
+  //TODO: check for high score and show high score modal
   async function restartGameOnModalClose() {
     setShowScoreModal(false);
     setScore(0);
@@ -192,6 +209,30 @@ function App() {
 
     updatePersonAndNationalityList(difficulty);
     
+  }
+
+  async function processHighScore(e) {
+
+    if (canAddHighScore) {
+      var name = e.target.form[0].value;
+      if (name.length >= 15) {
+        alert('Your name must be 15 character or less')
+        return;
+      }
+
+      setCanAddHighScore(false);
+      return addHighScore(gameMode, difficulty, recentScore, name);
+    }
+
+    alert('You already submitted a high score for this round')
+  }
+
+  async function retrieveHighScoresAndPopulateHighScoreList() {
+
+    return getHighScores(gameMode, difficulty)
+    .then(scores => {setHighScoreList(scores.reverse())
+      setShowHighScoreListModal(true);
+    });
   }
 
   async function logBrokenImageAndGetNewPerson() {
@@ -234,7 +275,43 @@ function App() {
                       <p>Game mode:  {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode}</p>
                       <p>{gameMode != HELTER_SKELTER ? "Difficulty: " + difficulty : null}</p>
                       <button className="modalButton" type="button" onClick={() => restartGameOnModalClose()}>Retry</button>
-        </Modal>
+                    </Modal>
+
+                    <Modal isOpen={showHighScoreModal}
+                    onRequestClose={() => restartGameOnModalClose()} 
+                    style={modalCSS}>
+
+                      <div>
+                      <h2>You scored a top 5 score of: {recentScore} </h2>
+                      <p>Game mode:  {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode}</p>
+                      <p>{gameMode != HELTER_SKELTER ? "Difficulty: " + difficulty : null}</p>
+                      </div>
+
+                      <div>
+                      <form>
+                      <input type='text' name='name' placeholder='Enter your name (< 15 digits) for the leaderboard'></input>
+                      <button type='button' onClick={(e) => processHighScore(e)}>Enter</button>
+                      </form>
+                      </div>
+
+                      <div>
+
+                      <button type="button" onClick={() => retrieveHighScoresAndPopulateHighScoreList()} >Show high scores</button>
+                      </div>
+
+                      <div>
+                        <button type='button' onClick={() => setShowHighScoreModal(false)}>Exit</button>
+                      </div>
+                    </Modal>
+
+                    <Modal isOpen={showHighScoreListModal}
+                    onRequestClose={() => setShowHighScoreListModal(false)}
+                    style={modalCSS}>
+
+                      {highScoreList.map(person => <h3>{person.player_name}: {person.score} </h3>)}
+
+                      
+                    </Modal>
 
                     <br></br>
                     <br></br>
