@@ -36,8 +36,8 @@ function App() {
   const [showHighScoreListModal, setShowHighScoreListModal] = useState(false);
   const [highScoreList, setHighScoreList] = useState([])
   const [canAddHighScore, setCanAddHighScore] = useState(false);
-  const [displayHighScoreGameMode, setDisplayHighScoreGameMode] = useState("");
-  const [displayHighScoreDifficulty, setDisplayHighScoreDifficulty] = useState("");
+  const [displayHighScoreGameMode, setDisplayHighScoreGameMode] = useState(SANDBOX);
+  const [displayHighScoreDifficulty, setDisplayHighScoreDifficulty] = useState(HARD);
   const [showDisplayHighScoreList, setShowDisplayHighScoreList] = useState(false);
 
   useEffect(() => {
@@ -400,7 +400,7 @@ function App() {
                       <br></br>
                     <div>
                       <select name="game mode" id="game mode" onChange={(e) => setDisplayHighScoreDifficulty(e.target.value)}>
-                        <option value="hard" selected='true' > Hard</option>
+                        <option value="hard" selected="selected" > Hard </option>
                         <option value="medium">Medium</option>
                         <option value="easy">Easy</option>
                         <option value="helterSkelter">helterSkelter</option> 
