@@ -78,7 +78,12 @@ export async function isSameRegion(actual, candidate) {
 
 export async function getHighScores(gameMode, difficulty) {
 
-    return await axios.post(backendURL + "/get/highscore", {gameMode: gameMode, difficulty: difficulty},
+    var formattedGameMode = gameMode
+    if ("hard" == gameMode) {
+        formattedGameMode = "high";
+    }
+
+    return await axios.post(backendURL + "/get/highscore", {gameMode: formattedGameMode, difficulty: difficulty},
         {
             headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: SECRET },
           })
