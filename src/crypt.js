@@ -1,6 +1,6 @@
 import crypto from "crypto-js"
 
-const secret_key = process.env.REACT_APP_SECRET_KEY //prod only
+const secret_key = process.env.REACT_APP_SECRET_KEY || "abcd" //prod only
 //const secret_key = "abcd"
 
 

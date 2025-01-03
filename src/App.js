@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useEffect, useState} from 'react'
 import Modal from 'react-modal'
-import { isSameRegion, getNationalities, getNextImage, getRandomPerson } from './game';
+import { isSameRegion, getNationalities, getNextImage, getRandomPerson, isHighScore, getHighScores, addHighScore } from './game';
 
 function App() {
   
@@ -32,12 +32,17 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameMode, setGameMode] = useState(SANDBOX);
   const [showScoreModal, setShowScoreModal] = useState(false);
+  const [showHighScoreModal, setShowHighScoreModal] = useState(false);
+  const [showHighScoreListModal, setShowHighScoreListModal] = useState(false);
+  const [highScoreList, setHighScoreList] = useState([])
+  const [canAddHighScore, setCanAddHighScore] = useState(false);
 
   useEffect(() => {
     if (score != 0) {
       updatePersonAndNationalityList(difficulty);
 
       if (gameMode === HELTER_SKELTER) {
+        //TODO: add time as function of score...higher score less time
         setTimeLeft(t => t + 15);
       };
     }
@@ -96,7 +101,7 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  if (timeLeft <= 0 && gameMode === HELTER_SKELTER && !showScoreModal) {
+  if (timeLeft <= 0 && gameMode === HELTER_SKELTER && !showScoreModal && !showHighScoreModal ) {
 
     try {
       showModalForHelterSkelter();
@@ -107,9 +112,23 @@ function App() {
   }
 
   async function showModalForHelterSkelter() {
-    setRecentScore(score);
-    setScore(0);
-    setShowScoreModal(true);
+
+    if (!showHighScoreModal && !showScoreModal) {
+      isHighScore(gameMode, difficulty, score)
+      .then(highScore => {
+
+        if (!highScore) {
+          setRecentScore(score);
+          setShowScoreModal(true);
+        }
+        else {
+          setCanAddHighScore(true);
+          setRecentScore(score);
+          setShowHighScoreModal(true);
+        }
+    })
+  }
+    
   }
 
   async function updateGameMode(gameMode, difficulty) {
@@ -167,23 +186,31 @@ function App() {
     });
   }
 
-  function handleSelectChange(e) {
-    console.log(e);
-    setSelection(e.target.value);
-  }
-
   async function handleButtonSelect(e) {
     e.preventDefault();
     setSelection(e.target.innerText.replaceAll(' ', '_'));
   }
 
   async function pauseGameandShowModal() {
-    setRecentScore(score);
-    setShowScoreModal(true);
+    isHighScore(gameMode, difficulty, score)
+    .then(highScore => {
+
+      if (!highScore) {
+        setRecentScore(score);
+        setShowScoreModal(true)
+      }
+      else {
+        setCanAddHighScore(true);
+        setRecentScore(score);
+        setShowHighScoreModal(true);
+      }
+  })
   }
 
   async function restartGameOnModalClose() {
+    
     setShowScoreModal(false);
+    setShowHighScoreModal(false);
     setScore(0);
     
     if (HELTER_SKELTER == gameMode) {
@@ -191,7 +218,54 @@ function App() {
     } 
 
     updatePersonAndNationalityList(difficulty);
-    
+  }
+
+  async function processHighScore(e) {
+
+    if (canAddHighScore) {
+      var name = e.target.form[0].value;
+      if (name.length >= 15) {
+        alert('Your name must be 15 character or less')
+        return;
+      }
+
+      setCanAddHighScore(false);
+      return addHighScore(gameMode, difficulty, recentScore, name);
+    }
+
+    alert('You already submitted a high score for this round')
+  }
+
+  async function retrieveHighScoresAndPopulateHighScoreList() {
+
+    return getHighScores(gameMode, difficulty)
+    .then(scores => {
+      setHighScoreList(scores)
+      setShowHighScoreListModal(true);
+    });
+  }
+
+  function formatHighScoreList() {
+
+    var formatHighScoreList = [];
+    var numScores = highScoreList.length > 5 ? 5 : highScoreList.length
+
+    for (var i = 0; i < numScores; i++) {
+      if (i == 0) {
+        formatHighScoreList.push(<h1>{highScoreList[i].player_name}: {highScoreList[i].score} </h1>)
+      }
+      else if (i == 1) {
+        formatHighScoreList.push(<h2>{highScoreList[i].player_name}: {highScoreList[i].score} </h2>)
+      }
+      else if (i == 2) {
+        formatHighScoreList.push(<h3>{highScoreList[i].player_name}: {highScoreList[i].score} </h3>)
+      }
+      else {
+        formatHighScoreList.push(<p>{highScoreList[i].player_name}: {highScoreList[i].score} </p>)
+      }
+    }
+
+    return formatHighScoreList;
   }
 
   async function logBrokenImageAndGetNewPerson() {
@@ -214,15 +288,13 @@ function App() {
                     <br></br>
                     <br></br>
               
-
-                    {nationalities.map(nat => (
-                      <button style={{ marginLeft: '.25rem', fontSize: '20px' }} key={nat} onClick={e => handleButtonSelect(e)} >{nat.replaceAll('_', ' ')}</button>
-                    ))}
+                      {nationalities.map(nat => (
+                        <button style={{ marginLeft: '.25rem', fontSize: '20px' }} key={nat} onClick={e => handleButtonSelect(e)} >{nat.replaceAll('_', ' ')}</button>
+                      ))}
                 
                     <br></br>
                     <br></br>
                 
-                    {/* <button type="button" onClick={() => evaluateChoice()} onKeyDown={() => evaluateChoice()}>Submit</button> */}
                     <button type="button" onClick={() => nextChoice(difficulty)}>I give up! </button>
                 
 
@@ -234,13 +306,48 @@ function App() {
                       <p>Game mode:  {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode}</p>
                       <p>{gameMode != HELTER_SKELTER ? "Difficulty: " + difficulty : null}</p>
                       <button className="modalButton" type="button" onClick={() => restartGameOnModalClose()}>Retry</button>
-        </Modal>
+                    </Modal>
+
+                    <Modal isOpen={showHighScoreModal}
+                    onRequestClose={() => restartGameOnModalClose()} 
+                    style={modalCSS}>
+
+                      <div>
+                        <h2>You scored a top 5 score of: {recentScore} </h2>
+                        <p>Game mode:  {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode}</p>
+                        <p>{gameMode != HELTER_SKELTER ? "Difficulty: " + difficulty : null}</p>
+                      </div>
+
+                      <div>
+                        <form>
+                          <input type='text' name='name' placeholder='Enter your name (< 15 digits) for the leaderboard'></input>
+                          <button type='button' onClick={(e) => processHighScore(e)}>Enter</button>
+                        </form>
+                      </div>
+
+                      <div>
+                        <button type="button" onClick={() => retrieveHighScoresAndPopulateHighScoreList()} >Show high scores</button>
+                      </div>
+
+                      <div>
+                        <button type='button' onClick={() => restartGameOnModalClose()}>Exit</button>
+                      </div>
+                    </Modal>
+
+                    <Modal isOpen={showHighScoreListModal}
+                    onRequestClose={() => setShowHighScoreListModal(false)}
+                    style={modalCSS}>
+
+                      {formatHighScoreList()}
+
+                    </Modal>
 
                     <br></br>
                     <br></br>
 
                     <button type="button" onClick={() => updateGameMode(HELTER_SKELTER, HELTER_SKELTER)}> Helter Skelter Mode </button> <button type="button" onClick={() => updateGameMode(SANDBOX, EASY)}> Easy </button> <button type="button" onClick={() => updateGameMode(SANDBOX, MEDIUM)}> Medium </button> <button type="button" onClick={() => updateGameMode(SANDBOX, HARD)}> Hard </button>
                     
+                    {/* Why did we have recentScore instead of score there */}
                     <p className='score' style={{fontSize: '20px' }}> Score: {score} </p>
                     {difficulty === HELTER_SKELTER ? null : <p className='difficulty'> Difficulty: {difficulty} </p> }
                     <p className='gameMode'>Game mode: {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode} </p>
