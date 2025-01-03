@@ -263,8 +263,6 @@ function App() {
 
     setDisplayHighScoreGameMode(gameMode);
 
-    console.log(displayHighScoreDifficulty + " " + displayHighScoreGameMode)
-
     return getHighScores(gameMode, displayHighScoreDifficulty)
     .then(scores => {
       setHighScoreList(scores)
