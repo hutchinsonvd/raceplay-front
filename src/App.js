@@ -43,7 +43,7 @@ function App() {
 
       if (gameMode === HELTER_SKELTER) {
         //TODO: add time as function of score...higher score less time
-        setTimeLeft(t => t + 15);
+        setTimeLeft(t => t + 15 - getTimerModifier());
       };
     }
   }, [score]);
@@ -109,6 +109,11 @@ function App() {
     catch (error) {
       console.error(error)
     }
+  }
+
+  function getTimerModifier() {
+
+    return Math.floor(score / 5) < 15 ? Math.floor(score / 5) : 14;
   }
 
   async function showModalForHelterSkelter() {
