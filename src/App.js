@@ -2,7 +2,6 @@ import './App.css';
 import React, {useEffect, useState} from 'react'
 import Modal from 'react-modal'
 import { isSameRegion, getNationalities, getNextImage, getRandomPerson, isHighScore, getHighScores, addHighScore } from './game';
-import { render } from '@testing-library/react';
 
 function App() {
   
