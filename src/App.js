@@ -36,6 +36,9 @@ function App() {
   const [showHighScoreListModal, setShowHighScoreListModal] = useState(false);
   const [highScoreList, setHighScoreList] = useState([])
   const [canAddHighScore, setCanAddHighScore] = useState(false);
+  const [displayHighScoreGameMode, setDisplayHighScoreGameMode] = useState("");
+  const [displayHighScoreDifficulty, setDisplayHighScoreDifficulty] = useState("");
+  const [showDisplayHighScoreList, setShowDisplayHighScoreList] = useState(false);
 
   useEffect(() => {
     if (score != 0) {
@@ -250,6 +253,25 @@ function App() {
     });
   }
 
+  async function retrieveHighScoresAndPopulateHighScoreDisplayList() {
+
+    var gameMode = SANDBOX;
+
+    if (displayHighScoreDifficulty == HELTER_SKELTER) {
+      gameMode = HELTER_SKELTER;
+    } 
+
+    setDisplayHighScoreGameMode(gameMode);
+
+    console.log(displayHighScoreDifficulty + " " + displayHighScoreGameMode)
+
+    return getHighScores(gameMode, displayHighScoreDifficulty)
+    .then(scores => {
+      setHighScoreList(scores)
+      setShowDisplayHighScoreList(true);
+    });
+  }
+
   function formatHighScoreList() {
 
     var formatHighScoreList = [];
@@ -266,7 +288,7 @@ function App() {
         formatHighScoreList.push(<h3>{highScoreList[i].player_name}: {highScoreList[i].score} </h3>)
       }
       else {
-        formatHighScoreList.push(<p>{highScoreList[i].player_name}: {highScoreList[i].score} </p>)
+        formatHighScoreList.push(<h4>{highScoreList[i].player_name}: {highScoreList[i].score} </h4>)
       }
     }
 
@@ -342,9 +364,26 @@ function App() {
                     <Modal isOpen={showHighScoreListModal}
                     onRequestClose={() => setShowHighScoreListModal(false)}
                     style={modalCSS}>
-
+                      
                       {formatHighScoreList()}
+                      {difficulty === HELTER_SKELTER ? null : <p className='difficulty'> Difficulty: {difficulty} </p> }
 
+                      <div>
+                        <p className='gameMode'>Game mode: {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode} </p>
+                      </div>
+                    </Modal>
+
+                    {/* FOR DISPLAYING CUSTOM HIGH SCORE LIST */}
+                    <Modal isOpen={showDisplayHighScoreList}
+                    onRequestClose={() => setShowDisplayHighScoreList(false)}
+                    style={modalCSS}>
+                      
+                      {formatHighScoreList()}
+                      {displayHighScoreGameMode === HELTER_SKELTER ? null : <p className='difficulty'> Difficulty: {displayHighScoreDifficulty} </p> }
+
+                      <div>
+                        <p className='gameMode'>Game mode: {displayHighScoreGameMode === HELTER_SKELTER ? "Helter Skelter" : displayHighScoreGameMode} </p>
+                      </div>
                     </Modal>
 
                     <br></br>
@@ -357,6 +396,20 @@ function App() {
                     {difficulty === HELTER_SKELTER ? null : <p className='difficulty'> Difficulty: {difficulty} </p> }
                     <p className='gameMode'>Game mode: {gameMode === HELTER_SKELTER ? "Helter Skelter" : gameMode} </p>
                     <p className='timer'>{gameMode === HELTER_SKELTER ? timeLeft : null} </p>
+
+                      {/* make a drop down to pick which high scores to look at */}
+                      <br></br>
+                      <br></br>
+                    <div>
+                      <select name="game mode" id="game mode" onChange={(e) => setDisplayHighScoreDifficulty(e.target.value)}>
+                        <option value="hard" selected>Hard</option>
+                        <option value="medium">Medium</option>
+                        <option value="easy">Easy</option>
+                        <option value="helterSkelter">helterSkelter</option> 
+                      </select>
+
+                        <button type='button' onClick={() => retrieveHighScoresAndPopulateHighScoreDisplayList()} >Show high scores for selected game mode</button>
+                    </div>
 
       </div>
     );
