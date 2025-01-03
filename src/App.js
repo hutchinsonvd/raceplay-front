@@ -113,7 +113,6 @@ function App() {
 
   async function showModalForHelterSkelter() {
 
-    //TODO: put a lock on this as helter skelter will continously call it
     if (!showHighScoreModal && !showScoreModal) {
       isHighScore(gameMode, difficulty, score)
       .then(highScore => {
@@ -192,7 +191,6 @@ function App() {
     setSelection(e.target.innerText.replaceAll(' ', '_'));
   }
 
-  //TODO: check for high score and show high score modal
   async function pauseGameandShowModal() {
     isHighScore(gameMode, difficulty, score)
     .then(highScore => {
@@ -209,7 +207,6 @@ function App() {
   })
   }
 
-  //TODO: check for high score and show high score modal
   async function restartGameOnModalClose() {
     
     setShowScoreModal(false);
