@@ -400,7 +400,7 @@ function App() {
                       <br></br>
                     <div>
                       <select name="game mode" id="game mode" onChange={(e) => setDisplayHighScoreDifficulty(e.target.value)}>
-                        <option value="hard" selected>Hard</option>
+                        <option value="hard" selected='true' > Hard</option>
                         <option value="medium">Medium</option>
                         <option value="easy">Easy</option>
                         <option value="helterSkelter">helterSkelter</option> 
