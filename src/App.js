@@ -397,16 +397,15 @@ function App() {
 
                       {/* make a drop down to pick which high scores to look at */}
                       <br></br>
-                      <br></br>
                     <div>
-                      <select name="game mode" id="game mode" onChange={(e) => setDisplayHighScoreDifficulty(e.target.value)}>
+                      <select  style={{ marginRight: '.25rem'}} name="game mode" id="game mode" onChange={(e) => setDisplayHighScoreDifficulty(e.target.value)}>
                         <option value="hard" selected="selected" > Hard </option>
                         <option value="medium">Medium</option>
                         <option value="easy">Easy</option>
                         <option value="helterSkelter">helterSkelter</option> 
                       </select>
-
-                        <button type='button' onClick={() => retrieveHighScoresAndPopulateHighScoreDisplayList()} >Show high scores for selected game mode</button>
+              
+                        <button type='button' onClick={() => retrieveHighScoresAndPopulateHighScoreDisplayList()} >Show high scores</button>
                     </div>
 
       </div>
