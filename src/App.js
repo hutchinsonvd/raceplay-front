@@ -234,7 +234,7 @@ function App() {
       var name = e.target.form[0];
 
       if (name == null) {
-        alert('Your name must be something as your name')
+        alert('You must put something as your name')
         return;
       }
 
