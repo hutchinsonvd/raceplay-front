@@ -231,14 +231,26 @@ function App() {
   async function processHighScore(e) {
 
     if (canAddHighScore) {
-      var name = e.target.form[0].value;
-      if (name.length >= 15) {
+      var name = e.target.form[0];
+
+      if (name == null) {
+        alert('Your name must be something as your name')
+        return;
+      }
+
+      var formattedName = name.trim();
+
+      if (formattedName.length < 5) {
+        alert('Your name must be at least 5 characters')
+        return;
+      }
+      if (formattedName.length >= 15) {
         alert('Your name must be 15 character or less')
         return;
       }
 
       setCanAddHighScore(false);
-      return addHighScore(gameMode, difficulty, recentScore, name);
+      return addHighScore(gameMode, difficulty, recentScore, formattedName);
     }
 
     alert('You already submitted a high score for this round')
@@ -277,16 +289,16 @@ function App() {
 
     for (var i = 0; i < numScores; i++) {
       if (i == 0) {
-        formatHighScoreList.push(<h1>{highScoreList[i].player_name}: {highScoreList[i].score} </h1>)
+        formatHighScoreList.push(<h1>1. {highScoreList[i].player_name}: {highScoreList[i].score} </h1>)
       }
       else if (i == 1) {
-        formatHighScoreList.push(<h2>{highScoreList[i].player_name}: {highScoreList[i].score} </h2>)
+        formatHighScoreList.push(<h2>2. {highScoreList[i].player_name}: {highScoreList[i].score} </h2>)
       }
       else if (i == 2) {
-        formatHighScoreList.push(<h3>{highScoreList[i].player_name}: {highScoreList[i].score} </h3>)
+        formatHighScoreList.push(<h3>3. {highScoreList[i].player_name}: {highScoreList[i].score} </h3>)
       }
       else {
-        formatHighScoreList.push(<h4>{highScoreList[i].player_name}: {highScoreList[i].score} </h4>)
+        formatHighScoreList.push(<h4>{i + 1 }. {highScoreList[i].player_name}: {highScoreList[i].score} </h4>)
       }
     }
 
