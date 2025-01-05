@@ -244,8 +244,8 @@ function App() {
         alert('Your name must be at least 5 characters')
         return;
       }
-      if (formattedName.length >= 15) {
-        alert('Your name must be 15 character or less')
+      if (formattedName.length > 10) {
+        alert('Your name must be 10 character or less')
         return;
       }
 
