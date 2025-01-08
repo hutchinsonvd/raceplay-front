@@ -39,6 +39,8 @@ function App() {
   const [displayHighScoreGameMode, setDisplayHighScoreGameMode] = useState(SANDBOX);
   const [displayHighScoreDifficulty, setDisplayHighScoreDifficulty] = useState(HARD);
   const [showDisplayHighScoreList, setShowDisplayHighScoreList] = useState(false);
+  const [showAffiliatesModal, setShowAffiliatesModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   useEffect(() => {
     if (score != 0) {
@@ -396,6 +398,31 @@ function App() {
                       </div>
                     </Modal>
 
+                    {/* Affiliates modal!  */}
+                    <Modal isOpen={showAffiliatesModal}
+                    onRequestClose={() => setShowAffiliatesModal(false)}
+                    style={modalCSS}>
+
+                      <h2>Our lovely affiliates!</h2>
+                      <p> Experiments in detached authorship <a href='https://opensea.io/collection/archplgn-sicily-paintings-2024' target="_blank">NFTs</a> </p>
+                      
+                      <p> Buy me a coffee! <a href='https://buymeacoffee.com/freefromthebody' target="_blank"> Click here!</a></p>
+                    </Modal>
+
+                    {/* About modal!  */}
+                    <Modal isOpen={showAboutModal}
+                    onRequestClose={() => setShowAboutModal(false)}
+                    style={modalCSS}>
+
+                      <h2> Good ole raceplay!</h2>
+                      <h4> In this increasingly connected world, you must ascertain who and what is in front of you. </h4>
+                        <h4>We are here for you. Till the end  </h4>
+                      
+                      <br></br>
+                      <p> Support the creator <a href='https://buymeacoffee.com/freefromthebody' target="_blank"> here! </a> Or follow my <a href='https://x.com/freefromthebody' target="_blank"> twitter </a></p>
+                      <p> With creative support from <a href='https://x.com/Shoshyber' target="_blank">bobby</a></p>
+                    </Modal>
+
                     <br></br>
                     <br></br>
 
@@ -419,7 +446,12 @@ function App() {
               
                         <button type='button' onClick={() => retrieveHighScoresAndPopulateHighScoreDisplayList()} >Show high scores</button>
                     </div>
-
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    {/* grr i want a footer */}
+                    <div style={{position: 'relative', bottom: '0', left: '0', height: '100px%', width: '100%', overflow: 'hidden'}}><button type='button' onClick={() => setShowAffiliatesModal(true)}> Affiliates </button> <button type='button' onClick={() => setShowAboutModal(true)}> About </button> </div>
+                     
       </div>
     );
   }
